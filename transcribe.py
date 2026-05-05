@@ -24,7 +24,10 @@ def main():
     print(f"Start time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"Transcribing '{audio_path}' using device: {device}")
 
-    model = WhisperModel("base", device=device, compute_type=compute_type)
+    if device == "cuda":
+        model = WhisperModel("large-v3", device=device, compute_type=compute_type)
+    else:
+        model = WhisperModel("distil-large-v2", device=device, compute_type=compute_type, cpu_threads=32, num_workers=8)
 
     segments, info = model.transcribe(audio_path, language="en")
 
